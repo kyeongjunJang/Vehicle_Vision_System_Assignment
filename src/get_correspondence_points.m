@@ -1,63 +1,43 @@
-function pts = get_correspondence_points(I, k, Threshold, sigma)
-halfwid = sigma;
+function [H,num_inliers,residual] = get_correspondence_points(img1, img2)
+    keypoint_img1 = im2double(rgb2gray(img1));
+    keypoint_img2 = im2double(rgb2gray(img2));
+    
+    harris_sigma = 2;
+    harris_thresh = 0.05;
+    harris_radius = 2;
+    [~,y_keypoint_img1,x_keypoint_img1] = harris(keypoint_img1,harris_sigma,harris_thresh,harris_radius,1);
 
-[xx, yy] = meshgrid(-halfwid:halfwid, -halfwid:halfwid);
-
-Gxy = exp(-(xx .^ 2 + yy .^ 2) / (2 * sigma ^ 2));
-
-Gx = xx .* exp(-(xx .^ 2 + yy .^ 2) / (2 * sigma ^ 2));
-Gy = yy .* exp(-(xx .^ 2 + yy .^ 2) / (2 * sigma ^ 2));
-
-numOfRows = size(I, 1);
-numOfColumns = size(I, 2);
-
-% 1) Compute x and y derivatives of image
-Ix = conv2(Gx, I);
-Iy = conv2(Gy, I);
-
-% size(Ix)
-
-% 2) Compute products of derivatives at every pixel
-Ix2 = Ix .^ 2;
-Iy2 = Iy .^ 2;
-Ixy = Ix .* Iy;
-
-% 3)Compute the sums of the products of derivatives at each pixel
-Sx2 = conv2(Gxy, Ix2);
-Sy2 = conv2(Gxy, Iy2);
-Sxy = conv2(Gxy, Ixy);
-
-im = zeros(numOfRows, numOfColumns);
-for x=1:numOfRows
-   for y=1:numOfColumns
-%        x,y
-       % 4) Define at each pixel(x, y) the matrix H in paper M matrix
-       H = [Sx2(x, y) Sxy(x, y); 
-            Sxy(x, y) Sy2(x, y)]; 
-       
-       % 5) Compute the response of the detector at each pixel
-       R = det(H) - k * (trace(H) ^ 2);
-       
-       % 6) Threshold on value of R
-       if (R > Threshold)
-          im(x, y) = R;
-       end
-   end
+    [~,y_keypoint_img2,x_keypoint_img2] = harris(keypoint_img2,harris_sigma,harris_thresh,harris_radius,1);
+    
+    sift_radius = 5;
+    descriptors_src = find_sift(keypoint_img1,[x_keypoint_img1,y_keypoint_img1, ...
+        sift_radius*ones(length(x_keypoint_img1),1)]);
+    descriptors_des = find_sift(keypoint_img2,[x_keypoint_img2,y_keypoint_img2, ...
+        sift_radius*ones(length(x_keypoint_img2),1)]);
+    
+    num_putative_matches = 200;
+    [matches_src,matches_des] = select_putative_matches(...
+        descriptors_src,descriptors_des,num_putative_matches);
+    XY_src = [x_keypoint_img1(matches_src),y_keypoint_img1(matches_src)];
+    XY_des = [x_keypoint_img2(matches_des),y_keypoint_img2(matches_des)];
+%     length(XY_src)
+    num_ransac_iter = 5000;
+    [H,num_inliers,residual] = ransac(XY_src,XY_des,num_ransac_iter,...
+        @homography_fit,@homography_tf);
+    
+%     img_res = stitchH(img_src,H,img_des);
+    
+    figure, imagesc(keypoint_img1), axis image, colormap(gray), hold on
+    plot(x_keypoint_img1,y_keypoint_img1,'ys'),
+    plot(x_keypoint_img1(matches_src),y_keypoint_img1(matches_src),'bs'),
+    predict = homography_tf(XY_src,H);
+    dists = sum((XY_des - predict).^2,2);
+    inlier_idx = find(dists < 0.3);
+    plot(XY_src(inlier_idx,1),XY_src(inlier_idx,2),'gs'),
+    
+    figure, imagesc(keypoint_img2), axis image, colormap(gray), hold on
+    plot(x_keypoint_img2,y_keypoint_img2,'ys'),
+    plot(x_keypoint_img2(matches_des),y_keypoint_img2(matches_des),'bs'),
+    plot(XY_des(inlier_idx,1),XY_des(inlier_idx,2),'gs'),
 end
 
-% 7) Compute nonmax suppression
-output = im > imdilate(im, [1 1 1; 1 0 1; 1 1 1]);
-
-figure, imshow(I);
-hold on
-for x=1:numOfRows
-   for y=1:numOfColumns
-       if (output(x,y))
-           plot(y,x,'r+');
-       end
-   end
-end
-hold off
-% figure, imshow(im)
-pts = output;
-end
