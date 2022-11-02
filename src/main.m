@@ -17,13 +17,14 @@ Image1 = imread('../KITTI-Dataset/2011_09_26_drive_0048/unsync_unrect/image_02/d
 Image2 = imread('../KITTI-Dataset/2011_09_26_drive_0048/unsync_unrect/image_03/data/0000000000.png');
 
 %% Undistortion
-undistortImage1 = undistort_image(Image1, K_00, D_00, 1);
-undistortImage2 = undistort_image(Image2, K_01, D_01, 1);
+% undistortImage1 = undistort_image(Image1, K_00, D_00, 1);
+% undistortImage2 = undistort_image(Image2, K_01, D_01, 1);
 
 %% Get Correspondence Points
-[H,num_inliers,residual] = get_correspondence_points(Image1,undistortImage2);
+% [H,num_inliers,residual] = get_correspondence_points(Image1,undistortImage2);
 
-
+%% Get Disparity Map
+disparityImage = get_disparity_map(Image1, Image2);
 
 
 
