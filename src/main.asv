@@ -32,17 +32,17 @@ undistortImage1 = undistort_image(Image1, K_02, D_02, 1);
 undistortImage2 = undistort_image(Image2, K_03, D_03, 1);
 
 %% Get Correspondence Points
-[m1_concat, m2_concat] = get_correspondence_points(undistortImage1, undistortImage2, 1);
+[m1_concat, m2_concat] = get_correspondence_points(undistortImage1, undistortImage2);
 
 %% for More Matching Pairs
-for i = 2:28
+for i = 2:2
     Image1 = imread([cam2_folder, img_name(i, :)]);
     Image2 = imread([cam3_folder, img_name(i, :)]);
 
     undistortImage1 = undistort_image(Image1, K_00, D_00, 1);
     undistortImage2 = undistort_image(Image2, K_01, D_01, 1);
 
-    [m1, m2] = get_correspondence_points(undistortImage1,undistortImage2, 0);
+    [m1, m2] = get_correspondence_points(undistortImage1,undistortImage2);
  
     m1_concat = vertcat(m1_concat, m1);
     m2_concat = vertcat(m2_concat, m2);
@@ -63,9 +63,12 @@ R_rect = estimate_Rrect(t);
 undistortImage1 = undistort_image(Image1, K_02, D_02, 1);
 undistortImage2 = undistort_image(Image2, K_03, D_03, 1);
 
-drawnow; figure; imshow(Image1); title('Raw Image');
 
-drawnow; figure; imshow(undistortImage1); title('Image Undistortion'); 
+figure; title('Raw Image'); imshow(Image1);
+
+
+figure; title('Image Undistortion'); imshow(undistortImage1);
+
 
 %% image rectification
 [t1, t2]=estimateStereoRectification(F,m1_concat,m2_concat,[size(undistortImage1,1),size(undistortImage1,2)]);
@@ -73,17 +76,22 @@ tform1 = projtform2d(t1);
 tform2 = projtform2d(t2);
 [I1Rect, I2Rect] = rectifyStereoImages(undistortImage1,undistortImage2,tform1,tform2);
 
-drawnow; figure; imshow([I1Rect, I2Rect]); title('Image Rectification');
+figure; imshow([I1Rect, I2Rect]);
+title('Image Rectification');
 
 %% Get Disparity Map
-disparityImage = get_disparity_map(I1Rect, I2Rect);
-
-drawnow; figure; imshow(disparityImage); title('Disparity Map');clim([-100 100]);
+% disparityImage = get_disparity_map(I1Rect, I2Rect);
+% 
+% figure; imshow(disparityImage);
+% title('Disparity Map');
 % colormap gray;
 % colorbar ;
+% clim([-100 100]);
 
 disparityImage_with_DP = get_disparity_map_with_dynamic_programming(I1Rect, I2Rect);
 
-drawnow; figure; imshow(disparityImage_with_DP); title('Disparity Map with Dynamic Programming');clim([-100 100]);
-% colormap gray;
-% colorbar ;
+figure; imshow(disparityImage_with_DP);
+title('Disparity Map with Dynamic Programming');
+colormap gray;
+colorbar ;
+clim([-100 100]);

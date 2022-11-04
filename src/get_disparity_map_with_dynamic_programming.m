@@ -3,7 +3,7 @@ left_I=mean(left_I,3);
 right_I=mean(right_I,3);
 I_disp=zeros(size(left_I), 'single');
 disp_range=100;
-h_block_size=10;
+h_block_size=3;
 blocksize=h_block_size*2+1;
 row=size(left_I,1);
 col=size(left_I,2);
@@ -55,10 +55,10 @@ end
 
 I_disp = I_disp - disp_range- 1;
 
-figure; imshow(I_disp);
-colormap gray;
-colorbar ;
-caxis([-disp_range disp_range]);
-% title('Disparity Map with Dynamic programming');
+% figure; imshow(I_disp);
+% colormap gray;
+% colorbar ;
+% caxis([-disp_range disp_range]);
+% % title('Disparity Map with Dynamic programming');
 
 end

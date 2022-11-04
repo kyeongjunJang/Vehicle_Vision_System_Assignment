@@ -3,7 +3,7 @@ left_I=mean(left,3);
 right_I=mean(right,3);
 I_disp=zeros(size(left_I),'single');
 disp_range=100;%45;
-h_block_size=10;%10;%5;
+h_block_size=3;%10;%5;
 blocksize=h_block_size*2+1;
 row=size(left_I,1);
 col=size(left_I,2);
@@ -38,10 +38,10 @@ for m =1:row
     clc;fprintf('Getting Disparity %d %%\n',round(m/row*100));
 end
 
-figure; imshow(I_disp);
-colormap gray;
-colorbar ;
-caxis([-disp_range disp_range]);
-title('Disparity Map');
+% figure; imshow(I_disp);
+% colormap gray;
+% colorbar ;
+% caxis([-disp_range disp_range]);
+% title('Disparity Map');
 
 end
