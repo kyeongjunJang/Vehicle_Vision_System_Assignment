@@ -118,14 +118,14 @@ for i=1:num_pts
     end    
     sift_arr(i,:) = reshape(curr_sift, [1 num_samples * num_angles]);    
     
-%     % visualization
-%     if sigma_edge >= 3
-%         subplot(1,2,1);
-%         rescale_and_imshow(I(y_lo:y_hi,x_lo:x_hi) .* reshape(sum(weights,2), [y_hi-y_lo+1,x_hi-x_lo+1]));
-%         subplot(1,2,2);
-%         rescale_and_imshow(curr_sift);
-%         pause;
-%     end
+    % visualization
+    if sigma_edge >= 3
+        subplot(1,2,1);
+        rescale_and_imshow(I(y_lo:y_hi,x_lo:x_hi) .* reshape(sum(weights,2), [y_hi-y_lo+1,x_hi-x_lo+1]));
+        subplot(1,2,2);
+        rescale_and_imshow(curr_sift);
+        pause;
+    end
 end
 
 

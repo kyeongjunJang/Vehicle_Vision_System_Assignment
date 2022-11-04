@@ -1,7 +1,5 @@
 % HARRIS - Harris corner detector
-%
 % Usage:  [cim, r, c] = harris(im, sigma, thresh, radius, disp)
-%
 % Arguments:   
 %            im     - image to be processed.
 %            sigma  - standard deviation of smoothing Gaussian. Typical
@@ -13,33 +11,11 @@
 %            disp   - optional flag (0 or 1) indicating whether you want
 %                     to display corners overlayed on the original
 %                     image. This can be useful for parameter tuning.
-%
-% Returns:
-%            cim    - binary image marking corners.
-%            r      - row coordinates of corner points.
-%            c      - column coordinates of corner points.
-%
-% If thresh and radius are omitted from the argument list 'cim' is returned
-% as a raw corner strength image and r and c are returned empty.
-
-% Reference: 
-% C.G. Harris and M.J. Stephens. "A combined corner and edge detector", 
-% Proceedings Fourth Alvey Vision Conference, Manchester.
-% pp 147-151, 1988.
-%
-% Author: 
-% Peter Kovesi   
-% Department of Computer Science & Software Engineering
-% The University of Western Australia
-% pk@cs.uwa.edu.au  www.cs.uwa.edu.au/~pk
-%
-% March 2002
 
 function [cim, r, c] = harris(im, sigma, thresh, radius, disp)
     if ndims(im) == 3
         im = rgb2gray(im);
     end
-%     error(nargchk(2,5,nargin));
 
     [dx, dy] = meshgrid(-1:1, -1:1);% Derivative masks, sobel mask
     
@@ -56,11 +32,10 @@ function [cim, r, c] = harris(im, sigma, thresh, radius, disp)
     
 %     cim = (Ix2.*Iy2 - Ixy.^2)./(Ix2 + Iy2);% + eps); % Harris corner measure
 
-    % Alternate Harris corner measure used by some.  Suggested that
-    k = 0.04; % - I find this a bit arbitrary and unsatisfactory.
+    k = 0.04; % 0.04~0.06
     Det = Ix2.*Iy2 - Ixy.^2;
     Tr = Ix2 + Iy2;
-    cim = Det - k*Tr.^2; 
+    cim = Det - k*Tr.^2;
 
     if nargin > 2   % We should perform nonmaximal suppression and threshold
 	
@@ -78,8 +53,8 @@ function [cim, r, c] = harris(im, sigma, thresh, radius, disp)
 	if nargin==5 & disp      % overlay corners on original image
 	    figure, imagesc(im), axis image, colormap(gray), hold on
 	    plot(c,r,'ys'), title('corners detected');
-	end
-    
-    else  % leave cim as a corner strength image and make r and c empty.
+    end
+
+    else
 	r = []; c = [];
     end
