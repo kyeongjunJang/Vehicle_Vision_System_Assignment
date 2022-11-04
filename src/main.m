@@ -85,13 +85,3 @@ title('Disparity Map with Dynamic Programming');
 colormap gray;
 colorbar ;
 clim([-100 100]);
-
-
-% [J1,J2] = rectifyStereoImages(undistortImage1,undistortImage2,R_rect,R_rect)
-% tform1 = projtform2d(K_02*inv(R)*inv(K_02));
-% tform2 = projtform2d(K_03*inv(R*R_rect)*inv(K_03));
-% [I1Rect, I2Rect] = rectifyStereoImages(undistortImage1,undistortImage2,tform1,tform2);
-% rectImage1 = rectify_image(undistortImage1, K_02, R_rect);
-% rectImage2 = rectify_image(undistortImage2, K_03, R*R_rect);
-% figure; imshow([I1Rect, I2Rect]);
-% figure; imshow([undistortImage1, undistortImage2]);

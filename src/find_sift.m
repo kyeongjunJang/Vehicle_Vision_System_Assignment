@@ -1,21 +1,4 @@
 function sift_arr = find_sift(I, circles, enlarge_factor)
-%%
-%% Compute non-rotation-invariant SIFT descriptors of a set of circles 
-%% I is the image
-%% circles is an Nx3 array where N is the number of circles, where the
-%%    first column is the x-coordinate, the second column is the y-coordinate,
-%%    and the third column is the radius
-%% enlarge_factor is by how much to enarge the radius of the circle before
-%%    computing the descriptor (a factor of 1.5 or larger is usually necessary
-%%    for best performance)
-%% The output is an Nx128 array of SIFT descriptors
-%%
-%% Note that this code is not rotation-invariant, i.e., it does not attempt 
-%% to normalize the patches by rotating them so that the horizontal direction 
-%% is aligned with the dominant gradient orientation of the patch. 
-%%
-%% (c) Lana Lazebnik
-%%
 
 if ndims(I) == 3
     I = im2double(rgb2gray(I));

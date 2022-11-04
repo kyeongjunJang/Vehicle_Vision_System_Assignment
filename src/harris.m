@@ -1,17 +1,3 @@
-% HARRIS - Harris corner detector
-% Usage:  [cim, r, c] = harris(im, sigma, thresh, radius, disp)
-% Arguments:   
-%            im     - image to be processed.
-%            sigma  - standard deviation of smoothing Gaussian. Typical
-%                     values to use might be 1-3.
-%            thresh - threshold (optional). Try a value ~1000.
-%            radius - radius of region considered in non-maximal
-%                     suppression (optional). Typical values to use might
-%                     be 1-3.
-%            disp   - optional flag (0 or 1) indicating whether you want
-%                     to display corners overlayed on the original
-%                     image. This can be useful for parameter tuning.
-
 function [cim, r, c] = harris(im, sigma, thresh, radius, disp)
     if ndims(im) == 3
         im = rgb2gray(im);
@@ -39,14 +25,9 @@ function [cim, r, c] = harris(im, sigma, thresh, radius, disp)
 
     if nargin > 2   % We should perform nonmaximal suppression and threshold
 	
-	% Extract local maxima by performing a grey scale morphological
-	% dilation and then finding points in the corner strength image that
-	% match the dilated image and are also greater than the threshold.
 	sze = 2*radius+1;                   % Size of mask.
 	mx = ordfilt2(cim,sze^2,ones(sze)); % Grey-scale dilate.
 	cim = (cim==mx)&(cim>thresh);       % Find maxima.
-    
-% 	cim = (cim>thresh);  
 	
 	[r,c] = find(cim);                  % Find row,col coords.
 	
