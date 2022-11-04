@@ -8,11 +8,12 @@ fspecial gaussian
 im
 
 statistics and machine learning toolbox
+zscore
 
 Deep Learning Toolbox 
 sumsqr
 
 Computer Vision Toolbox
-estimate Funda matrix
+estimateFundamentalMatrix
 
 
