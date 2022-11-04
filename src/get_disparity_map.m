@@ -45,5 +45,4 @@ colormap gray;
 colorbar ;
 caxis([-disp_range disp_range]);
 title('Disparity Map');
-
 end
