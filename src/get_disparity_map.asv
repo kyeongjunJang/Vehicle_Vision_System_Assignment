@@ -4,8 +4,8 @@ function I_disp=get_disparity_map(left, right)
 left_I=mean(left,3);
 right_I=mean(right,3);
 I_disp=zeros(size(left_I),'single');
-disp_range=45;%45;
-h_block_size=5;%5;
+disp_range=80;%45;
+h_block_size=10;%5;
 blocksize=h_block_size*2+1;
 row=size(left_I,1);
 col=size(left_I,2);
@@ -40,11 +40,11 @@ for m =1:row
     end
 end
 
-figure; imshow(I_disp);
-colormap jet;
-colorbar ;
-caxis([0 15]);
-title('Depth map from  block matching');
-colormapeditor
+imshow(I_disp);
+% colormap jet;
+% colorbar ;
+% caxis([0 15]);
+% title('Depth map from  block matching');
+% colormapeditor
 
 end

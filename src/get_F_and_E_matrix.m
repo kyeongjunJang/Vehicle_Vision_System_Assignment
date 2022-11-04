@@ -4,8 +4,7 @@
 %// My Lab : VISLAB(http://me.pusan.ac.kr)                               //
 %// Eight-Point Algorithm
 %//////////////////////////////////////////////////////////////////////////
-
-clc; clear all; close all;
+function [F, E]=get_F_and_E_matrix(img1, img2, m1, m2, K1, K2)
 
 % Corresponding points between two images
 % sample #1 I11.jpg, I22.jpg
@@ -15,18 +14,18 @@ m1 = I11; m2 = I22;
 %}
 
 %sample #2 I1.jpg, I2.jpg
-load I1.txt; load I2.txt;
-m1 = I1; m2 = I2;
+% load I1.txt; load I2.txt;
+% m1 = I1; m2 = I2;
 
 s = length(m1);
 m1=[m1(:,1) m1(:,2) ones(s,1)];
 m2=[m2(:,1) m2(:,2) ones(s,1)];
-Width = 800; %image width
-Height = 600; %image height
+Width = size(img1,2); %image width
+Height = size(img1,1); %image height
 
 % Intrinsic Matrix
-load intrinsic_matrix.txt
-K = intrinsic_matrix;
+% load intrinsic_matrix.txt
+% K = intrinsic_matrix;
 
 % The matrix for normalization(Centroid)
 N=[2/Width 0 -1;
@@ -56,7 +55,8 @@ F = N'*F*N;
 
 %%
 %Get E
-E=K'*F*K;
+[F, inliersIndex] = estimateFundamentalMatrix(m1(:,1:2),m2(:,1:2));
+E=K2'*F*K1;
 % Multiple View Geometry 259page
 %Get 4 Possible P matrix
 % P4 = get4possibleP(E);
@@ -96,4 +96,4 @@ for i=1:s
     X(:,i) = V(:,4)./V(4,4);
 end
 %}
-
+end

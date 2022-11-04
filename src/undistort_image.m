@@ -1,6 +1,6 @@
 function Iu=undistort_image(Id, K, D, RGB)
-w = 1242; % Iu
-h = 375; % Iu
+w = 1392; % Iu
+h = 512; % Iu
 if (RGB == 1)
     Iu = (zeros(h,w,3));
     for y = 1:h
