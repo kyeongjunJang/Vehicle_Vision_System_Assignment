@@ -1,2 +1,5 @@
-cv_hw3/
-
+*.docx
+*.pdf
+*.zip
+vlfeat/
+2011_09_26_drive_0048/
